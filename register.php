@@ -1,26 +1,29 @@
 <?php
 include 'db.php';
+$msg = "";
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $schoolID = $_POST['u_schoolID'] ?? NULL;
+    $fname = $_POST['u_first_name'];
+    $lname = $_POST['u_last_name'];
+    $yearLevel = $_POST['u_year_level'] ?? NULL;
     $email = $_POST['u_email'];
     $password = password_hash($_POST['u_password'], PASSWORD_BCRYPT);
+    $type = $_POST['u_type'];
+   
+    $status = ($type == 'Admin') ? 'Approved' : 'Pending'; 
 
-    $type = "Student";
-    $status = "Pending";
-
-    $stmt = $conn->prepare("INSERT INTO tbl_user (u_email, u_password, u_type, u_status) VALUES (?, ?, ?, ?)");
-    $stmt->bind_param("ssss", $email, $password, $type, $status);
+    $stmt = $conn->prepare("INSERT INTO tbl_user (u_schoolID, u_first_name, u_last_name, u_year_level, u_email, u_password, u_type, u_status) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+    $stmt->bind_param("ssssssss", $schoolID, $fname, $lname, $yearLevel, $email, $password, $type, $status);
 
     if ($stmt->execute()) {
-        echo "Registration successful! Please for the Admin to approved."." <a href='index.php'>Go to Main Menu</a>";
+        $msg = "<div class='message success'>Registration successful! Please wait for Admin approval.</div>";
     } else {
-        echo "Error: " . $stmt->error;
-
-    $stmt->close();
-    $conn->close();
+        $msg = "<div class='message error'>Error: " . $conn->error . "</div>";
     }
+    $stmt->close();
 }
-
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -32,19 +35,60 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 </head>
 <body>
     <div class="container">
-        <h1>Register</h1>
-            <div class="register">
+    <h1>Register</h1>
 
-        <form method="POST" action="register.php">
-            <label for="u_email" > Email:</label>
-            <input type="email" id="u_email" name="u_email" required>
-            
-            <label for="u_password" >Password:</label>
-            <input type="password" id="u_password" name="u_password" required>
-            <br><button type="submit" class="btn-a">Register</button>
-        </form>
-        <a style="color:white;" href="index.php">Back to Main Menu</a>
-            </div>
+    <?php echo $msg; ?>
+
+    <div id="loader-container" style="display:none; text-align:center; padding: 20px;">
+        <div class="loader"></div>
+        <p>Processing your registration...</p>
     </div>
+
+    <div class="register" id="register-form">
+        <form method="POST" action="register.php" onsubmit="showLoader()">
+    <label for="u_type">User Type:</label>
+    <select id="u_type" name="u_type" required onchange="toggleStudentFields()">
+        <option value="Student">Student</option>
+        <option value="Teacher">Teacher</option>
+        <option value="Admin">Admin</option>
+    </select>
+
+    <div id="student-fields">
+        <label for="u_schoolID">School ID:</label>
+        <input type="text" id="u_schoolID" name="u_schoolID">
+
+        <label for="u_year_level">Year Level:</label>
+        <select id="u_year_level" name="u_year_level">
+            <option value="1st Year">1st Year</option>
+            <option value="2nd Year">2nd Year</option>
+            <option value="3rd Year">3rd Year</option>
+            <option value="4th Year">4th Year</option>
+            <option value="N/A">N/A</option>
+        </select>
+    </div>
+
+    <label for="u_first_name">First Name:</label>
+    <input type="text" id="u_first_name" name="u_first_name" required>
+
+    <label for="u_last_name">Last Name:</label>
+    <input type="text" id="u_last_name" name="u_last_name" required>
+
+    <label for="u_email">Email:</label>
+    <input type="email" id="u_email" name="u_email" required>
+    
+    <label for="u_password">Password:</label>
+    <input type="password" id="u_password" name="u_password" required>
+
+    <br><button type="submit" class="btn-a">Register</button>
+    <br><button type="button" class="btn-a" onclick="window.location.href='index.php'">Back to Main Menu</button>
+</form>
+
+<script>
+function toggleFields() {
+    var type = document.getElementById("u_type").value;
+    var studentFields = document.getElementById("student_extras");
+    studentFields.style.display = (type === "Student") ? "block" : "none";
+}
+</script>
 </body>
 </html>

@@ -20,17 +20,10 @@ session_start();
         <div class="button-group">
             <a href="register.php" class="btn-a">Register</a>
             <a href="login.php" class="btn-a">Login</a>
-            <a href="admin_login.php" class="btn-a">Admin Login</a>
         </div>
     </div>
-    <h2> Lisoda man ani dawggszz haha</h2>
+    <h2></h2>
 
-    <
-    <
-    <
-    <
-    <
-    <p>Gisolo ra diay ni nako sirzz<br> Next week na nako tiwason kay dukaa</p>
 
 </body> 
 </html>

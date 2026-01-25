@@ -9,6 +9,47 @@
     backdrop-filter: blur(3px);
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
+/* Ensure the container doesn't force everything to the center if you want left alignment */
+.container {
+    text-align: left; 
+    max-width: 300px; 
+    margin: 0 auto;
+}
+
+label {
+    display: block; /* Forces the label to its own line */
+    text-align: left; /* Aligns label text to the left */
+    margin-bottom: 5px; /* Adds space between label and textbox */
+    margin-top: 15px;
+    color: #C5B358;
+    font-weight: bold;
+}
+
+input[type="text"], 
+input[type="email"], 
+input[type="password"],
+select {
+    display: block; /* Forces the textbox to its own line */
+    width: 100%; /* Makes the textbox fill the container width */
+    padding: 10px;
+    box-sizing: border-box; /* Ensures padding doesn't break the width */
+    border: 2px solid #ccc;
+    border-radius: 4px;
+}
+.loader {
+    border: 6px solid #f3f3f3;
+    border-top: 6px solid #349304; 
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    animation: spin 1s linear infinite;
+    display: inline-block;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
 
 h1 {
     font-size: 2.5em;
@@ -60,21 +101,8 @@ body{
     padding: 10px;
     text-align: center;
 }
-input[type="text"], input[type="email"], input[type="password"] {
-    width: 300px;
-    padding: 10px;
-    margin: 8px 0;
-    box-sizing: border-box;
-    border: 2px solid #ccc;
-    border-radius: 4px;
-}
 
-label {
-    display: block;
-    margin-top: 10px;
-    margin-bottom: 5px;
-    color: #C5B358;
-}
+
 
 <!--REGISTERRRRRR-->
 
@@ -98,4 +126,48 @@ label {
     text-decoration: none;
     text-align: center;
     border-radius: 4px;
+}
+<!--kuan kanang echo torism-->
+
+.message {
+    padding: 15px;
+    margin-bottom: 20px;
+    border-radius: 5px;
+    font-weight: bold;
+}
+.success {
+    background-color: rgba(52, 147, 4, 0.2);
+    border: 1px solid #349304;
+    color: #349304;
+}
+.error {
+    background-color: rgba(209, 26, 42, 0.2);
+    border: 1px solid #d11a2a;
+    color: #d11a2a;
+}
+
+<!--admin-->
+
+.user-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    background-color: rgba(255, 255, 255, 0.05);
+    color: white;
+}
+
+.user-table th, .user-table td {
+    padding: 12px;
+    border: 1px solid rgba(197, 179, 88, 0.3); /* Low opacity gold */
+    text-align: left;
+}
+
+.user-table th {
+    background-color: rgba(197, 179, 88, 0.2);
+    color: #C5B358;
+}
+
+.status-pending {
+    color: #f39c12;
+    font-weight: bold;
 }
