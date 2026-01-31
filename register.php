@@ -5,15 +5,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $schoolID = $_POST['u_schoolID'] ?? NULL;
     $fname = $_POST['u_first_name'];
     $lname = $_POST['u_last_name'];
-    $yearLevel = $_POST['u_year_level'] ?? NULL;
     $email = $_POST['u_email'];
     $password = password_hash($_POST['u_password'], PASSWORD_BCRYPT);
     $type = $_POST['u_type'];
-   
     $status = ($type == 'Admin') ? 'Approved' : 'Pending'; 
 
-    $stmt = $conn->prepare("INSERT INTO tbl_user (u_schoolID, u_first_name, u_last_name, u_year_level, u_email, u_password, u_type, u_status) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
-    $stmt->bind_param("ssssssss", $schoolID, $fname, $lname, $yearLevel, $email, $password, $type, $status);
+    $stmt = $conn->prepare("INSERT INTO tbl_user (u_schoolID, u_first_name, u_last_name, u_email, u_password, u_type, u_status) VALUES (?, ?, ?, ?, ?, ?, ?)");
+    // Ang "sssssss" nagpasabot nga 7 ka string variables ang imong gi-bind
+    $stmt->bind_param("sssssss", $schoolID, $fname, $lname, $email, $password, $type, $status);
 
     if ($stmt->execute()) {
         $msg = "<div class='message success'>Registration successful! Please wait for Admin approval.</div>";
@@ -57,14 +56,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <label for="u_schoolID">School ID:</label>
         <input type="text" id="u_schoolID" name="u_schoolID">
 
-        <label for="u_year_level">Year Level:</label>
-        <select id="u_year_level" name="u_year_level">
-            <option value="1st Year">1st Year</option>
-            <option value="2nd Year">2nd Year</option>
-            <option value="3rd Year">3rd Year</option>
-            <option value="4th Year">4th Year</option>
-            <option value="N/A">N/A</option>
-        </select>
+        
     </div>
 
     <label for="u_first_name">First Name:</label>
@@ -76,19 +68,42 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <label for="u_email">Email:</label>
     <input type="email" id="u_email" name="u_email" required>
     
-    <label for="u_password">Password:</label>
-    <input type="password" id="u_password" name="u_password" required>
-
+   <label for="u_password">Password:</label>
+        <div style="position: relative; width: 100%;">
+            <input type="password" id="u_password" name="u_password" required style="width: 100%; padding-right: 40px;">
+            <span id="togglePassword" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); cursor: pointer;">
+                👁️
+            </span>
+        </div>
     <br><button type="submit" class="btn-a">Register</button>
     <br><button type="button" class="btn-a" onclick="window.location.href='index.php'">Back to Main Menu</button>
 </form>
 
 <script>
-function toggleFields() {
+function toggleStudentFields() {
     var type = document.getElementById("u_type").value;
-    var studentFields = document.getElementById("student_extras");
-    studentFields.style.display = (type === "Student") ? "block" : "none";
+    var studentFields = document.getElementById("student-fields");
+    
+    // Kon ang pinili kay "Student", ipakita ang fields. Kon dili, itago.
+    if (type === "Student") {
+        studentFields.style.display = "block";
+    } else {
+        studentFields.style.display = "none";
+    }
 }
+</script>
+<script>
+const togglePassword = document.querySelector('#togglePassword');
+const password = document.querySelector('#u_password');
+
+togglePassword.addEventListener('click', function (e) {
+    // I-toggle ang type attribute
+    const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
+    password.setAttribute('type', type);
+    
+    // I-toggle ang icon (mata nga abli ug mata nga naay slash/piyong)
+    this.textContent = type === 'password' ? '🕶️' : '👓';
+});
 </script>
 </body>
 </html>

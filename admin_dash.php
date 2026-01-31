@@ -54,8 +54,6 @@ $evaluations_count = $evaluations_query->fetch_assoc()['count'];
 <body>
     <div class="container" style="width: 90%; max-width: 1100px;">
         <h1>Admin Dashboard</h1>
-        <p>Welcome, <strong>Admin</strong>. <a href="logout.php" style="color:#C5B358;">Logout</a></p>
-
         <h2 style="text-align:left;">System Overview</h2>
         <div class="stats-grid">
             <div class="stat-card">
@@ -111,7 +109,12 @@ $evaluations_count = $evaluations_query->fetch_assoc()['count'];
                     <tr><td colspan="4">All registered students have been approved.</td></tr>
                 <?php endif; ?>
             </tbody>
+
         </table>
+
+        <div class="footer-actions">   
+            <a href="login.php" class="back-btn">← Logout</a>
+        </div>
     </div>
-</body>
+ </body>
 </html>

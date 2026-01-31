@@ -25,16 +25,14 @@ label {
     font-weight: bold;
 }
 
-input[type="text"], 
-input[type="email"], 
-input[type="password"],
-select {
-    display: block; /* Forces the textbox to its own line */
-    width: 100%; /* Makes the textbox fill the container width */
+/* Siguroha nga ang input fields consistent ang gidak-on */
+input[type="password"], input[type="text"], input[type="email"], select {
+    width: 100%;
     padding: 10px;
-    box-sizing: border-box; /* Ensures padding doesn't break the width */
-    border: 2px solid #ccc;
-    border-radius: 4px;
+    margin: 8px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    box-sizing: border-box; /* Importante kini para sa width alignment */
 }
 .loader {
     border: 6px solid #f3f3f3;
@@ -117,6 +115,7 @@ body{
     color: white;
 }
 
+
 .btn-b {
     display: inline-block;
     margin: 2px;
@@ -170,4 +169,77 @@ body{
 .status-pending {
     color: #f39c12;
     font-weight: bold;
+}
+
+.stat-card {
+    transition: transform 0.2s, background 0.2s;
+    cursor: pointer; /* Usbon ang cursor ngadto sa 'kamot' */
+}
+
+.stat-card:hover {
+    transform: translateY(-5px); /* Mo-alsa gamay inig hover */
+    background: rgba(255, 255, 255, 0.2); /* Mo-hayag og gamay */
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+}
+
+.back-btn {
+    display: inline-block;
+    padding: 10px 15px;
+    background-color: rgba(197, 179, 88, 0.2); /* Bulawan nga transparent */
+    color: #C5B358;
+    text-decoration: none;
+    border-radius: 5px;
+    border: 1px solid #C5B358;
+    font-size: 0.9em;
+    transition: 0.3s;
+}
+
+.back-btn:hover {
+    background-color: #C5B358;
+    color: black;
+}
+/* Custom adjustment for the container to fit dashboard width */
+.dashboard-container {
+    max-width: 1100px !important; 
+    width: 90%;
+}   
+.stats-grid {
+    display: flex;             /* Gigamit ang Flexbox para mag-tapad */
+    justify-content: center;   /* I-center ang mga cards sa tunga */
+    gap: 10px;                 /* Distansya sa tunga sa duha ka cards */
+    margin-top: 30px;
+    flex-wrap: nowrap;         /* Pugngan nga dili mo-balhin sa ubos ang pikas card */
+}
+
+.stat-card {
+    flex: 1;                   
+    max-width: 400px;          /* Limitahan ang gilapdon para dili sobra ka dako */
+    background: rgba(255, 255, 255, 0.1);
+    padding: 20px;
+    border-radius: 10px;
+    border-left: 5px solid #C5B358;
+    text-align: left;
+}
+/* I-align ang logout button sa lower right */
+.footer-actions {
+    display: flex;
+    justify-content: flex-end; /* I-duso sa pinaka-tuo */
+    margin-top: 30px;          /* Distansya gikan sa table */
+}
+
+/* Siguraduhon nga nindot ang porma sa button */
+.back-btn {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: rgba(197, 179, 88, 0.2); 
+    color: #C5B358;
+    text-decoration: none;
+    border-radius: 5px;
+    border: 1px solid #C5B358;
+    transition: 0.3s;
+}
+
+.back-btn:hover {
+    background-color: #C5B358;
+    color: black;
 }
