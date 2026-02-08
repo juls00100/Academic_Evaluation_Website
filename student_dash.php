@@ -17,13 +17,11 @@ $total_teachers = $teacher_query ? $teacher_query->fetch_assoc()['count'] : 0;
 $evals_done_query = $conn->query("SELECT COUNT(*) as count FROM tbl_evaluations WHERE u_id = '$u_id'");
 $evals_done = $evals_done_query ? $evals_done_query->fetch_assoc()['count'] : 0;
 
-// 3. Fetch teachers not yet evaluated
 $pending_evals = $conn->query("
     SELECT * FROM tbl_teachers 
     WHERE t_id NOT IN (SELECT t_id FROM tbl_evaluations WHERE u_id = '$u_id')
 ");
 
-// Check if query failed (e.g., table doesn't exist) to avoid the "num_rows" error
 $has_pending = ($pending_evals && $pending_evals->num_rows > 0);
 ?>
 
@@ -50,6 +48,10 @@ $has_pending = ($pending_evals && $pending_evals->num_rows > 0);
         }
         .stat-card h3 { color: #C5B358; margin: 0; }
         .stat-card p { font-size: 0.9em; margin: 5px 0; color: white; }
+        
+        .user-table { width: 100%; border-collapse: collapse; background: #002147; }
+        .user-table th, .user-table td { padding: 12px; border: 1px solid #444; text-align: left; }
+        .user-table th { background: #C5B358; color: #002147; }
         
         .dashboard-container {
             max-width: 1100px !important; 
@@ -80,7 +82,7 @@ $has_pending = ($pending_evals && $pending_evals->num_rows > 0);
         <table class="user-table"> <thead>
                 <tr>
                     <th>Teacher Name</th>
-                    <th>Subject/Course</th>
+                    <th>Department</th>
                     <th>Action</th>
                 </tr>
             </thead>
@@ -88,8 +90,8 @@ $has_pending = ($pending_evals && $pending_evals->num_rows > 0);
                 <?php if ($pending_evals->num_rows > 0): ?>
                     <?php while($row = $pending_evals->fetch_assoc()): ?>
                     <tr>
-                        <td><?php echo $row['t_fname'] . " " . $row['t_lname']; ?></td>
-                        <td><?php echo $row['t_course']; ?></td>
+                        <td><?php echo $row['t_first_name'] . " " . $row['t_last_name']; ?></td>
+                        <td><?php echo $row['t_department']; ?></td>
                          <td>
                             <a href="evaluate.php?t_id=<?php echo $row['t_id']; ?>" class="btn-a" style="padding: 5px 10px; font-size: 0.8em;">Evaluate</a>
                         </td>
@@ -105,8 +107,45 @@ $has_pending = ($pending_evals && $pending_evals->num_rows > 0);
             </tbody>
         </table>
 
-        <div class="footer-actions">   
-            <a href="login.php" class="back-btn">← Logout</a>
+        <h2 style="text-align:left;">Completed Evaluations</h2>
+        <table class="user-table">
+            <thead>
+                <tr>
+                    <th>Teacher Name</th>
+                    <th>Department</th>
+                    <th>Date Evaluated</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php
+                $completed_evals = $conn->query("
+                    SELECT t.t_first_name, t.t_last_name, t.t_department, e.e_date
+                    FROM tbl_evaluations e
+                    JOIN tbl_teachers t ON e.t_id = t.t_id
+                    WHERE e.u_id = $u_id
+                    ORDER BY e.e_date DESC
+                ");
+                if ($completed_evals && $completed_evals->num_rows > 0): ?>
+                    <?php while($row = $completed_evals->fetch_assoc()): ?>
+                    <tr>
+                        <td><?php echo $row['t_first_name'] . " " . $row['t_last_name']; ?></td>
+                        <td><?php echo $row['t_department']; ?></td>
+                        <td><?php echo date('M d, Y', strtotime($row['e_date'])); ?></td>
+                    </tr>
+                    <?php endwhile; ?>
+                <?php else: ?>
+                    <tr>
+                        <td colspan="3" style="text-align:center;">
+                            No evaluations completed yet.
+                        </td>
+                    </tr>
+                <?php endif; ?>
+            </tbody>
+        </table>
+
+        <div class="footer-actions" style="display: flex; gap: 10px; justify-content: center;">   
+            <a href="edit_profile.php" class="back-btn" style="background: #C5B358; color: #002147;">Edit Profile</a>
+            <a href="logout.php" class="back-btn">← Logout</a>
         </div>
     </div> 
 </body>
